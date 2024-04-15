@@ -10,8 +10,8 @@
 
 // I AM NOT DONE
 
-pub trait Licensed {
-    fn licensing_info(&self) -> String;
+pub trait Licensed<T> {
+    fn licensing_info(&self) -> Self;
 }
 
 struct SomeSoftware {
