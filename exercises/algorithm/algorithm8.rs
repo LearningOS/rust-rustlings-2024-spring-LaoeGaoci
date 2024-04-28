@@ -61,23 +61,31 @@ pub struct myStack<T>
 impl<T> myStack<T> {
     pub fn new() -> Self {
         Self {
-			//TODO
-			q1:Queue::<T>::new(),
-			q2:Queue::<T>::new()
+            q1: Queue::new(),
+            q2: Queue::new(),
         }
     }
+
     pub fn push(&mut self, elem: T) {
-        //TODO
+        // Push elem to the empty queue (q2)
+        self.q2.enqueue(elem);
+        // Move all elements from q1 to q2
+        while let Ok(x) = self.q1.dequeue() {
+            self.q2.enqueue(x);
+        }
+        // Swap the roles of q1 and q2
+        std::mem::swap(&mut self.q1, &mut self.q2);
     }
+
     pub fn pop(&mut self) -> Result<T, &str> {
-        //TODO
-		Err("Stack is empty")
+        self.q1.dequeue()
     }
+
     pub fn is_empty(&self) -> bool {
-		//TODO
-        true
+        self.q1.is_empty()
     }
 }
+
 
 #[cfg(test)]
 mod tests {

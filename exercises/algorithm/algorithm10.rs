@@ -38,10 +38,32 @@ pub trait Graph {
     fn adjacency_table(&self) -> &HashMap<String, Vec<(String, i32)>>;
     fn add_node(&mut self, node: &str) -> bool {
         //TODO
-		true
+        if !self.contains(node) {
+            self.adjacency_table.insert(node.to_string(), Vec::new());
+            true
+        } else {
+            false
+        }
     }
     fn add_edge(&mut self, edge: (&str, &str, i32)) {
         //TODO
+        let (src, dst, weight) = edge;
+
+    // Ensure both nodes exist in the graph, add them if they don't
+    self.add_node(src);
+    self.add_node(dst);
+
+    // Add the edge from src to dst
+    self.adjacency_table_mutable()
+        .entry(src.to_string())
+        .or_insert_with(Vec::new)
+        .push((dst.to_string(), weight));
+
+    // Add the edge from dst to src (since the graph is undirected)
+    self.adjacency_table_mutable()
+        .entry(dst.to_string())
+        .or_insert_with(Vec::new)
+        .push((src.to_string(), weight));
     }
     fn contains(&self, node: &str) -> bool {
         self.adjacency_table().get(node).is_some()
