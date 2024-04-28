@@ -12,16 +12,27 @@
 //
 // Execute `rustlings hint cow1` or use the `hint` watch subcommand for a hint.
 
-// I AM NOT DONE
+// I AM DONE
 
 use std::borrow::Cow;
 
 fn abs_all<'a, 'b>(input: &'a mut Cow<'b, [i32]>) -> &'a mut Cow<'b, [i32]> {
-    for i in 0..input.len() {
-        let v = input[i];
-        if v < 0 {
-            // Clones into a vector if not already owned.
-            input.to_mut()[i] = -v;
+    let mut needs_mutation = false;
+
+    // 先检查是否有任何负数，如果有，则需要修改
+    for &value in input.iter() {
+        if value < 0 {
+            needs_mutation = true;
+            break;
+        }
+    };
+
+    // 如果需要修改，则对所有元素取绝对值
+    if needs_mutation {
+        for i in 0..input.len() {
+            if input[i] < 0 {
+                input.to_mut()[i] = input[i].abs();  // 只有在这里才真正触发克隆
+            }
         }
     }
     input
@@ -49,6 +60,8 @@ mod tests {
         let mut input = Cow::from(&slice[..]);
         match abs_all(&mut input) {
             // TODO
+            Cow::Borrowed(_) => Ok(()),
+            _ => Err("Expected borrowed value"),
         }
     }
 
@@ -61,6 +74,8 @@ mod tests {
         let mut input = Cow::from(slice);
         match abs_all(&mut input) {
             // TODO
+            Cow::Owned(_) => Ok(()),
+            _ => Err("Expected owned value"),
         }
     }
 
@@ -73,6 +88,8 @@ mod tests {
         let mut input = Cow::from(slice);
         match abs_all(&mut input) {
             // TODO
+            Cow::Owned(_) => Ok(()),
+            _ => Err("Expected owned value because of mutation"),
         }
     }
 }
