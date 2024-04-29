@@ -2,7 +2,7 @@
 	queue
 	This question requires you to use queues to implement the functionality of the stac
 */
-// I AM NOT DONE
+// I AM DONE
 
 #[derive(Debug)]
 pub struct Queue<T> {
@@ -52,12 +52,11 @@ impl<T> Default for Queue<T> {
     }
 }
 
-pub struct myStack<T>
-{
-	//TODO
-	q1:Queue<T>,
-	q2:Queue<T>
+pub struct myStack<T> {
+    q1: Queue<T>, // Main queue used to store stack elements
+    q2: Queue<T>, // Temporary queue used for the push operation
 }
+
 impl<T> myStack<T> {
     pub fn new() -> Self {
         Self {
@@ -67,25 +66,27 @@ impl<T> myStack<T> {
     }
 
     pub fn push(&mut self, elem: T) {
-        // Push elem to the empty queue (q2)
+        // Place the new element into the temporary queue
         self.q2.enqueue(elem);
-        // Move all elements from q1 to q2
+
+        // Transfer all elements from the main queue to the temporary queue
         while let Ok(x) = self.q1.dequeue() {
             self.q2.enqueue(x);
         }
-        // Swap the roles of q1 and q2
+
+        // Swap the roles of the two queues so that q1 is again the main queue
         std::mem::swap(&mut self.q1, &mut self.q2);
     }
 
-    pub fn pop(&mut self) -> Result<T, &str> {
-        self.q1.dequeue()
+    pub fn pop(&mut self) -> Result<T, &'static str> {
+        // Dequeue from the main queue
+        self.q1.dequeue().or(Err("Stack is empty"))
     }
 
     pub fn is_empty(&self) -> bool {
         self.q1.is_empty()
     }
 }
-
 
 #[cfg(test)]
 mod tests {

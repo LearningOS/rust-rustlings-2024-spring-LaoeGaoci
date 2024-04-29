@@ -74,6 +74,23 @@ impl<T> LinkedList<T> {
     }
 	pub fn reverse(&mut self){
 		// TODO
+        // 交换 start 和 end 指针
+    std::mem::swap(&mut self.start, &mut self.end);
+
+        // 遍历链表并交换每个节点的 prev 和 next
+        let mut current = self.start;
+        while let Some(mut node_ptr) = current {
+            unsafe {
+                // 当前节点
+                let node = node_ptr.as_mut();
+
+                // 交换 prev 和 next
+                std::mem::swap(&mut node.prev, &mut node.next);
+
+                // 移动到下一个节点，这里的下一个节点是交换前的上一个节点
+                current = node.prev;
+            }
+        }
 	}
 }
 
@@ -115,6 +132,7 @@ mod tests {
         assert_eq!(3, list.length);
     }
 
+    
     #[test]
     fn create_string_list() {
         let mut list_str = LinkedList::<String>::new();

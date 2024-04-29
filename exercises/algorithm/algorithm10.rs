@@ -13,6 +13,7 @@ impl fmt::Display for NodeNotInGraph {
         write!(f, "accessing a node that is not in the graph")
     }
 }
+
 pub struct UndirectedGraph {
     adjacency_table: HashMap<String, Vec<(String, i32)>>,
 }
@@ -30,6 +31,7 @@ impl Graph for UndirectedGraph {
     }
     fn add_edge(&mut self, edge: (&str, &str, i32)) {
         //TODO
+        
     }
 }
 pub trait Graph {
@@ -39,7 +41,7 @@ pub trait Graph {
     fn add_node(&mut self, node: &str) -> bool {
         //TODO
         if !self.contains(node) {
-            self.adjacency_table.insert(node.to_string(), Vec::new());
+            self.adjacency_table().insert(node.to_string(), Vec::new());
             true
         } else {
             false
